@@ -22,6 +22,7 @@ function initMap() {
       if (infowindow) infowindow.close();
     }
   );
+  setInitialPostionOfSidebar(false);
 
   input = document.getElementById('location-input');
   autocomplete = new google.maps.places.Autocomplete(input);
@@ -40,6 +41,14 @@ function toggleSidebar() {
       sidebarHide.innerHTML = sidebarHidden ? '&gt;' : '&lt;';
     }
   );
+}
+
+function setInitialPostionOfSidebar(show) {
+  sidebarHidden = !show;
+  var sidebar = document.getElementById('sidebar');
+  var sidebarHide = document.getElementById('sidebar-hide');
+  sidebarHide.innerHTML = sidebarHidden ? '&gt;' : '&lt;';
+  sidebar.style.left = sidebarHidden ? '-400px' : '0';
 }
 
 function placeChanged() {
@@ -116,11 +125,18 @@ function showRestaurantMarkers(restaurants) {
 
 function openInfoWindow(res, marker) {
   if (infowindow) infowindow.close();
-
+  var ratingSpan = '';
+  if (res.user_rating.aggregate_rating !== '0') {
+    ratingSpan = '<span class="info-rating" style="background-color: #' +
+    res.user_rating.rating_color + '">' + res.user_rating.aggregate_rating +
+    '</span>';
+  }
   infowindow = new google.maps.InfoWindow({
-    content: '<h3>' + res.name + '</h3>' +
+    content: ratingSpan +
+      '<span class="info-heading">' + res.name + '</span><br/>' +
       'Cusisines: ' + res.cuisines + '<br/>' +
-      'Average Cost For Two: ' + res.average_cost_for_two
+      'Average Cost For Two: ' +
+        '<b>' + res.currency + ' ' + res.average_cost_for_two + '</b>'
   });
   infowindow.open(map, marker);
 }
