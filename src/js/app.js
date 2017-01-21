@@ -62,17 +62,18 @@ function getRestaurants(place) {
   var lat = place.geometry.location.lat();
   var lon = place.geometry.location.lng();
   var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
-    if (xmlhttp.readyState == XMLHttpRequest.DONE
-      && xmlhttp.status == 200) {
-        var data;
-        try {
-          data = JSON.parse(xmlhttp.responseText);
-        } catch(err) {
-          console.error(err);
-          return;
-        }
-        showRestaurants(data.restaurants);
+  xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState === XMLHttpRequest.DONE
+      && xmlhttp.status === 200) {
+      var data;
+      try {
+        data = JSON.parse(xmlhttp.responseText);
+      } catch (err) {
+        console.error(err);
+        return;
+      }
+      showRestaurants(data.restaurants);
+      boundMapOnRestaurants(data.restaurants);
     }
   };
 
@@ -95,6 +96,26 @@ function showRestaurants(restaurants) {
       });
     }
   );
+}
+
+function boundMapOnRestaurants(restaurants) {
+  var latlngList = [];
+  restaurants.forEach(
+    function (obj) {
+      var res = obj.restaurant;
+      var lat = parseFloat(res.location.latitude);
+      var lng = parseFloat(res.location.longitude);
+      latlngList.push(new google.maps.LatLng(lat, lng));
+    }
+  );
+  var bounds = new google.maps.LatLngBounds();
+  latlngList.forEach(
+    function (n) {
+      bounds.extend(n);
+    }
+ );
+  map.setCenter(bounds.getCenter());
+  map.fitBounds(bounds);
 }
 
 XMLHttpRequest.prototype.realSend = XMLHttpRequest.prototype.send;
