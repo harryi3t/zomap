@@ -5,13 +5,13 @@
 #map{
   height: 100vh;
   width: 100%;
-  z-index: -1;
 }
 #sidebar{
   position: absolute;
   height: 100vh;
   width: 400px;
   background-color: wheat;
+  z-index: 1;
 }
 #sidebar-hide{
   height: 60px;
@@ -23,6 +23,7 @@
   color: white;
   font-size: 25px;
   font-weight: bolder;
+  z-index: 1;
 }
 #location-input{
   padding: 10px;
