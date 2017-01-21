@@ -149,7 +149,7 @@ function openSidebar(res) {
   if (sidebarHidden) {
     toggleSidebar();
   }
-  img.src = res.thumb;
+  img.src = res.thumb || 'img/no-image-found.png';
   title.innerHTML = res.name;
   price.innerHTML = res.average_cost_for_two;
 }

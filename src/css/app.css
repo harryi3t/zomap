@@ -26,7 +26,7 @@
   z-index: 1;
 }
 .sel-res-img-placeholder{
-  height: 300px;
+  height: 200px;
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
