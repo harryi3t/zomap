@@ -149,7 +149,7 @@ function openSidebar(res) {
   if (sidebarHidden) {
     toggleSidebar();
   }
-  img.src = res.thumb || 'img/no-image-found.png';
+  img.src = res.thumb;
   title.innerHTML = res.name;
   price.innerHTML = res.average_cost_for_two;
 }
@@ -183,6 +183,10 @@ function removeMarkers() {
     }
   );
   markers = [];
+}
+
+function imgError(img) {
+  img.src = '';
 }
 
 XMLHttpRequest.prototype.realSend = XMLHttpRequest.prototype.send;
