@@ -17,7 +17,7 @@ function initMap() {
   input = document.getElementById('location-input');
   autocomplete = new google.maps.places.Autocomplete(input);
   autocomplete.bindTo('bounds', map);
-  autocomplete.addListener('place_changed', place_changed);
+  autocomplete.addListener('place_changed', placeChanged);
 }
 
 function toggleSidebar() {
@@ -76,7 +76,7 @@ function getRestaurants(place) {
     }
   };
 
-  xmlhttp.open('GET', zomatoAPI + '/search?lat='+lat+'&lon='+lon, true);
+  xmlhttp.open('GET', zomatoAPI + '/search?lat=' + lat + '&lon=' + lon, true);
   xmlhttp.send();
 }
 
@@ -84,10 +84,12 @@ function showRestaurants(restaurants) {
   restaurants.forEach(
     function (obj) {
       var res = obj.restaurant;
+      var lat = parseFloat(res.location.latitude);
+      var lng = parseFloat(res.location.longitude);
       res.marker = new google.maps.Marker({
         position: {
-          lat: parseFloat(res.location.latitude),
-          lng: parseFloat(res.location.longitude)
+          lat: lat,
+          lng: lng
         },
         map: map
       });
@@ -96,7 +98,7 @@ function showRestaurants(restaurants) {
 }
 
 XMLHttpRequest.prototype.realSend = XMLHttpRequest.prototype.send;
-var newSend = function(vData) {
+var newSend = function (vData) {
   this.setRequestHeader('user-key', 'b78d1ebc7a9795b00f1f4d04a2fbf8ef');
   this.realSend(vData);
 };
