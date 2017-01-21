@@ -1,6 +1,5 @@
 var map;
 var sidebarHidden = false;
-var marker;
 var input;
 var autocomplete;
 var zomatoAPI = 'https://developers.zomato.com/api/v2.1';
@@ -13,10 +12,6 @@ function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 14,
     center: btm
-  });
-  marker = new google.maps.Marker({
-    position: btm,
-    map: map
   });
 
   input = document.getElementById('location-input');
@@ -31,14 +26,14 @@ function toggleSidebar() {
   var sidebarHide = document.getElementById('sidebar-hide');
   var from = sidebarHidden ? 0 : -400;
   var to = sidebarHidden ? -400 : 0;
-  TinyAnimate.animateCSS(sidebar, 'left', 'px', from, to, 500, 'easeInOutQuart', function() {
-    sidebarHide.innerHTML = sidebarHidden ? '&gt;' : '&lt;';
-  });
+  TinyAnimate.animateCSS(sidebar, 'left', 'px', from, to, 500, 'easeInOutQuart',
+    function () {
+      sidebarHide.innerHTML = sidebarHidden ? '&gt;' : '&lt;';
+    }
+  );
 }
 
-function place_changed() {
-  if (!marker) return;
-  marker.setVisible(false);
+function placeChanged() {
   var place = autocomplete.getPlace();
   if (!place.geometry) {
     // User entered the name of a Place that was not suggested and
@@ -53,8 +48,6 @@ function place_changed() {
     map.setCenter(place.geometry.location);
     map.setZoom(17); // Why 17? Because it looks good.
   }
-  marker.setPosition(place.geometry.location);
-  marker.setVisible(true);
   getRestaurants(place);
 
   // infowindowContent.children['place-icon'].src = place.icon;
