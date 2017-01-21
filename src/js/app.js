@@ -3,6 +3,7 @@ var sidebarHidden = false;
 var input;
 var autocomplete;
 var zomatoAPI = 'https://developers.zomato.com/api/v2.1';
+var markers = [];
 
 function initMap() {
   var btm = {
@@ -72,6 +73,7 @@ function getRestaurants(place) {
         console.error(err);
         return;
       }
+      removeMarkers();
       showRestaurants(data.restaurants);
       boundMapOnRestaurants(data.restaurants);
     }
@@ -87,13 +89,8 @@ function showRestaurants(restaurants) {
       var res = obj.restaurant;
       var lat = parseFloat(res.location.latitude);
       var lng = parseFloat(res.location.longitude);
-      res.marker = new google.maps.Marker({
-        position: {
-          lat: lat,
-          lng: lng
-        },
-        map: map
-      });
+      var position = {lat: lat, lng: lng};
+      markers.push(new google.maps.Marker({position: position, map: map}));
     }
   );
 }
@@ -105,6 +102,8 @@ function boundMapOnRestaurants(restaurants) {
       var res = obj.restaurant;
       var lat = parseFloat(res.location.latitude);
       var lng = parseFloat(res.location.longitude);
+      if (lat === 0 && lng === 0) return;
+
       latlngList.push(new google.maps.LatLng(lat, lng));
     }
   );
@@ -116,6 +115,15 @@ function boundMapOnRestaurants(restaurants) {
  );
   map.setCenter(bounds.getCenter());
   map.fitBounds(bounds);
+}
+
+function removeMarkers() {
+  markers.forEach(
+    function (m) {
+      m.setMap(null);
+    }
+  );
+  markers = [];
 }
 
 XMLHttpRequest.prototype.realSend = XMLHttpRequest.prototype.send;
