@@ -3,7 +3,10 @@ var sidebarHidden = false;
 var input;
 var autocomplete;
 var zomatoAPI = 'https://developers.zomato.com/api/v2.1';
+var chartAPI =
+  'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|';
 var markers = [];
+var infowindow;
 
 function initMap() {
   var btm = {
@@ -14,6 +17,11 @@ function initMap() {
     zoom: 14,
     center: btm
   });
+  map.addListener('click',
+    function () {
+      if (infowindow) infowindow.close();
+    }
+  );
 
   input = document.getElementById('location-input');
   autocomplete = new google.maps.places.Autocomplete(input);
@@ -74,7 +82,7 @@ function getRestaurants(place) {
         return;
       }
       removeMarkers();
-      showRestaurants(data.restaurants);
+      showRestaurantMarkers(data.restaurants);
       boundMapOnRestaurants(data.restaurants);
     }
   };
@@ -83,16 +91,38 @@ function getRestaurants(place) {
   xmlhttp.send();
 }
 
-function showRestaurants(restaurants) {
+function showRestaurantMarkers(restaurants) {
   restaurants.forEach(
     function (obj) {
       var res = obj.restaurant;
       var lat = parseFloat(res.location.latitude);
       var lng = parseFloat(res.location.longitude);
       var position = {lat: lat, lng: lng};
-      markers.push(new google.maps.Marker({position: position, map: map}));
+      var pinColor = res.user_rating.rating_color;
+      var pinImage = new google.maps.MarkerImage(chartAPI + pinColor,
+        new google.maps.Size(21, 34),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(10, 34));
+      var marker = new google.maps.Marker({
+        icon: pinImage,
+        map: map,
+        position: position
+      });
+      marker.addListener('mouseover', openInfoWindow.bind(null, res, marker));
+      markers.push(marker);
     }
   );
+}
+
+function openInfoWindow(res, marker) {
+  if (infowindow) infowindow.close();
+
+  infowindow = new google.maps.InfoWindow({
+    content: '<h3>' + res.name + '</h3>' +
+      'Cusisines: ' + res.cuisines + '<br/>' +
+      'Average Cost For Two: ' + res.average_cost_for_two
+  });
+  infowindow.open(map, marker);
 }
 
 function boundMapOnRestaurants(restaurants) {
