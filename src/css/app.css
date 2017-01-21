@@ -25,6 +25,17 @@
   font-weight: bolder;
   z-index: 1;
 }
+.sel-res-img-placeholder{
+  height: 300px;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: gray;
+}
+#sel-res-img{
+  width: 100%;
+}
 #location-input{
   padding: 10px;
   width: 400px;

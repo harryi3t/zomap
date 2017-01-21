@@ -118,6 +118,7 @@ function showRestaurantMarkers(restaurants) {
         position: position
       });
       marker.addListener('mouseover', openInfoWindow.bind(null, res, marker));
+      marker.addListener('click', openSidebar.bind(null, res));
       markers.push(marker);
     }
   );
@@ -139,6 +140,18 @@ function openInfoWindow(res, marker) {
         '<b>' + res.currency + ' ' + res.average_cost_for_two + '</b>'
   });
   infowindow.open(map, marker);
+}
+
+function openSidebar(res) {
+  var img = document.getElementById('sel-res-img');
+  var title = document.getElementById('title');
+  var price = document.getElementById('price');
+  if (sidebarHidden) {
+    toggleSidebar();
+  }
+  img.src = res.thumb;
+  title.innerHTML = res.name;
+  price.innerHTML = res.average_cost_for_two;
 }
 
 function boundMapOnRestaurants(restaurants) {
