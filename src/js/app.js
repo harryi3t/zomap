@@ -155,6 +155,8 @@ function openSidebar(res) {
 }
 
 function boundMapOnRestaurants(restaurants) {
+  if (restaurants.length === 0) return;
+
   var latlngList = [];
   restaurants.forEach(
     function (obj) {
